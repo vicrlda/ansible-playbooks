@@ -1,0 +1,5 @@
+---
+# Abbreviation for lists and dictionaries, called “Flow collections”
+brazil: {name: Federative Republic of Brazil, location: South America, economy: 8th}
+animals: {'jaguar', 'sloth', 'piranha', 'kangaroo', 'koala', 'wombat'}
+...

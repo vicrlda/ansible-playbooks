@@ -1,0 +1,46 @@
+---
+# A more detailed country record
+name: Federative Republic of Brazil
+location: South America
+economy: 8th
+memberUnitedNationsSecurityCouncil: False
+animals:
+    - jaguar
+    - sloth
+    - piranha
+characteristics:
+    - friendly: High
+    - sunny: High
+    - welfare: Medium
+culture: |
+    The core culture of Brazil is derived from Portuguese culture,
+    because of its strong colonial ties with the Portuguese Empire.
+    Among other influences, the Portuguese introduced
+    the Portuguese language, Roman Catholicism and colonial architectural styles.
+    The culture was, however, also strongly influenced by
+    African, indigenous and non-Portuguese European cultures and traditions.
+# Wikipedia (https://en.wikipedia.org/wiki/Brazil)
+
+name: Commonwealth of Australia
+location: Oceania
+economy: 13th
+memberUnitedNationsSecurityCouncil: False
+animals:
+    - kangaroo
+    - koala
+    - wombat
+characteristics:
+    - friendly: High
+    - sunny: High
+    - welfare: High
+culture: |
+    Since 1788, the primary influence behind Australian culture has been Anglo-Celtic Western culture,
+    with some Indigenous influences.
+    The divergence and evolution that has occurred in the ensuing centuries has resulted in a distinctive Australian culture.
+    Since the mid-20th century,
+    American popular culture has strongly influenced Australia,
+    particularly through television and cinema.
+    Other cultural influences come from neighbouring Asian countries,
+    and through large-scale immigration from non-English-speaking nations.
+# Wikipedia (https://en.wikipedia.org/wiki/Australia)
+...

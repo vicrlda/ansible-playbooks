@@ -1,0 +1,7 @@
+---
+# A country record
+brazil:
+  name: Federative Republic of Brazil
+  location: South America
+  economy: 8th
+...

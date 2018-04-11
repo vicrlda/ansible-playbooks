@@ -1,0 +1,17 @@
+---
+# Countries records
+- brazil:
+    name: Federative Republic of Brazil
+    location: South America
+    animals:
+      - jaguar
+      - sloth
+      - piranha
+- australia:
+    name: Commonwealth of Australia
+    location: Oceania
+    animals:
+      - kangaroo
+      - koala
+      - wombat
+...

@@ -1,0 +1,10 @@
+---
+# A list of assorted animals
+animals:
+  - jaguar
+  - sloth
+  - piranha
+  - kangaroo
+  - koala
+  - wombat
+...
