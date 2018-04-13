@@ -15,7 +15,7 @@
   - name: Ensure apache is at the lastest version
     yum:
       name: httpd
-      state: lastest
+      state: latest
   - name: Write the apache config file
     template:
       src: /root/httpd.j2

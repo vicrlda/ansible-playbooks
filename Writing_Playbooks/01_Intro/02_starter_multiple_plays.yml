@@ -12,7 +12,7 @@
   - name: Ensure apache is at the lastest version
     yum:
       name: httpd
-      state: lastest
+      state: latest
   - name: Write the apache config file
     template:
       src: /root/httpd.j2
@@ -25,7 +25,7 @@
   - name: Ensure postgresql is at the lastest version
     yum:
       name: postgresql
-      state: lastest
+      state: latest
   - name: Ensure postgresql is started
     service:
       name: postgresql
