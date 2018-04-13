@@ -1,0 +1,21 @@
+- hosts: web
+  remote_user: root
+
+  tasks:
+  - name: template configuration file
+    template:
+      src: /root/template.j2
+      dest: /etc/foo.conf
+    notify:
+     - restart memcached
+     - restart apache
+
+  handlers:
+    - name: restart memcached
+      service:
+        name: memcached
+        state: restarted
+    - name: restart apache
+      service:
+        name: apache
+        state: restarted

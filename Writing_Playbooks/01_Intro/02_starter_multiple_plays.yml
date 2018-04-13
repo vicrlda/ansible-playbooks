@@ -1,0 +1,32 @@
+---
+# Please, before you running this playbook...
+# Execute this commands on the machine wich you installed ansible
+# $ touch httpd.j2
+# $ echo "I'm a Jinja2 template" >> httpd.j2
+# If you do not, probably the execution of playbook will fail.
+# Templating with Jinja2 will be explain later!
+- hosts: web
+  remote_user: root
+
+  tasks:
+  - name: Ensure apache is at the lastest version
+    yum:
+      name: httpd
+      state: lastest
+  - name: Write the apache config file
+    template:
+      src: /root/httpd.j2
+      dest: /etc/httpd.conf
+
+- hosts: db
+  remote_user: root
+
+  tasks:
+  - name: Ensure postgresql is at the lastest version
+    yum:
+      name: postgresql
+      state: lastest
+  - name: Ensure postgresql is started
+    service:
+      name: postgresql
+      state: started
