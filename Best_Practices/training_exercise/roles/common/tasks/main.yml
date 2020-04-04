@@ -1,0 +1,33 @@
+---
+
+# - name: 1) Atualizacao do S.O.
+#   yum: name=* state=latest update_cache=yes
+
+# - name: 2) Instalacao de pacotes para redes
+#   yum:
+#     name: "{{ packages }}"
+#     state: latest
+#   vars:
+#     packages:
+#       - net-tools
+#       - vim
+#       - nmap
+
+- name: 3) Copiando arquivo de backup
+  copy: src=backup.tar.xz dest=/tmp/backup.tar.xz
+
+- name: 4) Copiando um template
+  template: src=motd dest=/tmp/ force=yes owner=victor group=victor
+
+- name: 5) Instalacao do nginx
+  yum: name=nginx state=latest 
+  notify: Restart nginx
+
+# - name: 6) Configurando Timezone
+#   file: src=/usr/share/zoneinfo/America/Sao_Paulo dest=/etc/localtime state=link force=yes
+
+  # VARS -- COMMON > DEFAULTS > MAIN.YML
+  # with_items:
+  #   - "{{ common_packages }}"
+
+...
