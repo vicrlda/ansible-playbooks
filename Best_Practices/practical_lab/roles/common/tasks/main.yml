@@ -1,0 +1,89 @@
+---
+
+# tasks file for common
+
+# --- Configuracoes Gerais --- #
+
+- name: Alteracao do /etc/profile
+  lineinfile: dest=/etc/profile line={{ item }}
+  with_items:
+    - '#--- Variaveis e Alias Customizados ---#'
+    - 'export HISTTIMEFORMAT="%d/%m/%Y - %H:%M:%S - "'
+    - 'export HISTSIZE="5000"'
+    - 'export HISTFILESIZE="5000"'
+    - 'alias ls="ls -lh --color"'
+    - 'alias grep="grep -i --color"'
+    - 'alias vi="vim"'
+    - 'alias rm="rm -i"'
+
+- name: Desabilitando SELINUX de forma permanente
+  replace:
+    dest: /etc/selinux/config
+    regexp: 'SELINUX=enforcing'
+    replace: 'SELINUX=disabled'
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Desabilitando SELINUX de forma temporaria
+  shell: setenforce 0
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+# --- Gerenciamento de pacotes e  atualizacao do sistema operacional --- #
+
+- name: Instalacao do repositorio epel-release
+  yum: name=epel-release state=latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Atualizacao do sistema operacional
+  yum: name=* state=latest update_cache=yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Instalacao de pacotes - RedHat/CentOS
+  yum: name={{common_packages_redhat}} state=latest 
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Remocao de pacotes desnecessarios
+  yum: name={{item}} state=absent
+  with_items:
+    - NetworkManager
+    - NetworkManager-libnm
+    - firewalld
+    - postfix
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+# --- Gerenciamento de usuarios --- #
+
+- name: Criando o usuario novato
+  user:
+    name=novato
+    comment="novato que acabou de entrar"
+    shell=/bin/bash
+    home=/home/novato
+    password="344db06e7ee931c79451d33eb9b2eb1a"
+
+# --- Timezone --- #
+
+- name:  Configurando o timezone
+  file: src=/usr/share/zoneinfo/America/Sao_Paulo dest=/etc/localtime state=link force=yes owner=root group=root
+
+# --- Configuracoes de SSH --- #
+
+- name: Configurando sshd_config
+  lineinfile: 
+    dest=/etc/ssh/sshd_config
+    state=present
+    regexp={{ item.regexp }}
+    line={{ item.line }}
+  with_items:
+    - { regexp: '#Port 22', line: 'Port 22' }
+    - { regexp: '#Banner none', line: 'Banner /etc/ssh/banner_ssh' }
+    - { regexp: 'X11Fowarding yes', line: 'X11Fowarding no' }
+
+- name: Definindo protocolo versao 2 do SSH
+  lineinfile: dest=/etc/ssh/sshd_config line='Protocol 2'
+
+- name: Adicionando o motd
+  template: src=motd dest=/etc/motd force=yes owner=root group=root mode=0755
+  notify:
+    - Restart SSH
+
+...

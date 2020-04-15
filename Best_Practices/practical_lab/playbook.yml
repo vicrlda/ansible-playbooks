@@ -1,0 +1,12 @@
+---
+
+- name: Final Playbook - Executando o laboratorio com as tres maquinas...
+  hosts: all
+  roles:
+    - common
+    - mysql
+    - nginx
+    - php
+    - wordpress
+
+...

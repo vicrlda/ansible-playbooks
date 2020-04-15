@@ -1,0 +1,45 @@
+---
+
+# tasks file for php
+
+# Gerenciamento de pacotes
+
+- name: Instalacao dos repositorios PHP 7.2
+  yum: name={{item}} state=latest
+  with_items:
+    - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    - https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+
+- name: Instalacao dos pacotes PHP 7.2
+  yum: name={{ packages }} state=latest 
+
+# Configuracoes
+
+- name: Criando copia de seguranca do /etc/php.ini
+  command: cp /etc/php.ini /etc/php.ini_original
+  args:
+    warns: false
+
+- name: Criando copia de seguranca do /etc/php-fpm.d/www.conf
+  command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf_original
+  args:
+    warns: false
+
+- name:  Configurando Timezone do php.ini
+  lineinfile:
+    dest=/etc/php.ini
+    state=present
+    regexp=';date.timezone ='
+    line='date.timezone = America/Sao_Paulo'
+
+- name: Copiando o arquivo www.conf para o servidor
+  copy: src=www.conf dest=/etc/php-fpm.d/www.conf owner=root group=root
+
+- name: Criacao de diretorios utilizados pelo PHP-FPM
+  file: path={{item}} state=directory mode=755 owner=nginx group=nginx
+  with_items:
+    - /var/lib/php/session
+    - /var/lib/php/wsdlcache
+  notify: Restart php-fpm
+
+...

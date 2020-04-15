@@ -1,0 +1,77 @@
+---
+
+# tasks file for mysql
+
+# Instalacao de pacotes
+
+- name: Instalacao de pacotes
+  yum: name={{mariadb_packages}} state=latest update_cache=yes 
+  vars:
+    mariadb_packages:
+      - mariadb-client
+      - mariadb-server
+      - python-mysqldb
+  when: ansible_hostname == 'srv04'
+
+- name: Criacao da senha de root
+  command: openssl rand -base64 14 creates=/root/.my.cnf
+  register: mysql_root_pass
+  when: ansible_hostname == 'srv04'
+
+- name: Mostrar a senha
+  debug:
+    msg: "Senha: {{ mysql_root_pass.stdout }}"
+  when:
+    - mysql_root_pass.changed
+    - ansible_hostname == 'srv04'
+
+- name: Alteracao da senha de root
+  mysql_user: name=root host={{ item }} password={{ mysql_root_pass_stdout }}
+  with_items:
+    - 127.0.0.1
+    - localhost
+  when:
+    - mysql_root_pass.changed
+    - ansible_hostname == 'srv04'
+
+- name: Copiando template .my.cnf
+  template: src=.my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
+  when:
+    - mysql_root_pass.changed
+    - ansible_hostname == 'srv04'
+
+- name: Removendo o acesso anonimo
+  mysql_user: name="" host=localhost state=absent
+  when: ansible_hostname == 'srv04'
+
+- name: Removendo a base test
+  mysql_db: name=test state=absent
+  when: ansible_hostname == 'srv04'
+
+- name: Criacao da base de dados wordpress
+  mysql_db:
+    name: wordpress
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_pass.stdout }}"
+    login_host: localhost
+  when:
+    - mysql_root_pass.changed
+    - ansible_hostname == 'srv04'
+
+- name: Criacao do usuario wordpress e liberacao de acesso
+  mysql_user:
+    name: 'wordpress'
+    password: 'wordpress'
+    priv: 'wordpress.*:ALL'
+    host: '10.0.0.%'
+    login_user: root
+    login_password: "{{ mysql_root_pass.stdout }}"
+    login_host: localhost
+  when:
+    - mysql_root_pass.changed
+    - ansible_hostname == 'srv04'
+
+  notify: Restart MariaDB
+  
+...
